@@ -1,0 +1,5 @@
+import React,{createContext,useContext,useState,useEffect} from 'react';
+import {seed} from '../data/sample';import {hydrateDemo} from '../utils/demoState';
+const C=createContext(null);const clone=v=>JSON.parse(JSON.stringify(v));
+export function DemoProvider({children}){const [data,setData]=useState(()=>{try{const saved=JSON.parse(localStorage.getItem('equivra-v1'));return hydrateDemo(saved,seed)}catch{return clone(seed)}});const [toast,setToast]=useState('');useEffect(()=>{try{localStorage.setItem('equivra-v1',JSON.stringify(data))}catch{/* Demo still works in memory when storage is unavailable. */}},[data]);useEffect(()=>{if(!toast)return;const t=setTimeout(()=>setToast(''),3500);return()=>clearTimeout(t)},[toast]);const patch=(key,value)=>setData(d=>({...d,[key]:typeof value==='function'?value(d[key]):value}));const reset=()=>{setData(clone(seed));setToast('Demo data restored')};return <C.Provider value={{data,patch,reset,toast,notify:setToast}}>{children}{toast&&<div role="status" className="toast">{toast}</div>}</C.Provider>}
+export const useDemo=()=>useContext(C);

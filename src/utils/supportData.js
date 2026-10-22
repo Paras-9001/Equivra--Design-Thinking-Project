@@ -1,0 +1,2 @@
+export function ratingSummary(provider){const reviews=provider.reviews||[],count=reviews.length;return {count,average:count?reviews.reduce((sum,review)=>sum+Number(review.rating),0)/count:0}}
+export function matchingSessions(provider,{mode='Either',max='',budget=''}){return (provider.sessions||[]).filter(s=>s.active!==false&&Number.isInteger(Number(s.duration))&&Number(s.duration)>=5&&Number.isFinite(Number(s.price))&&Number(s.price)>=0&&(mode==='Either'||s.mode==='Both'||s.mode===mode)&&(!max||Number(s.price)<=Number(max))&&(!budget||Number(s.price)<Number(budget)))}

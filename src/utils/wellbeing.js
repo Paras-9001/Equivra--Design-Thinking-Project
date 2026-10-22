@@ -1,0 +1,4 @@
+export const moods=[['Calm','😌'],['Okay','🙂'],['Tired','😴'],['Overwhelmed','😣'],['Hopeful','🌤️'],['Energized','😄']];
+export const moodEmoji=value=>moods.find(([name])=>name===value)?.[1]||'🙂';
+export function saveCheckin(checkins,{date,stress,mood,reflection=''}){const level=Number(stress);if(!/^\d{4}-\d{2}-\d{2}$/.test(date)||!Number.isFinite(level)||level<0||level>10||!moods.some(([name])=>name===mood))return {error:'Choose a valid stress level and mood.'};return {checkins:[...checkins.filter(x=>x.date!==date),{id:`checkin-${date}`,date,stress:level,mood,reflection:String(reflection).trim()}].sort((a,b)=>a.date.localeCompare(b.date))}}
+export function stressSeries(checkins,range){return checkins.filter(x=>x.date>=range.start&&x.date<=range.end).sort((a,b)=>a.date.localeCompare(b.date)).map(x=>({day:x.date.slice(5),stress:Number(x.stress),mood:x.mood}))}
